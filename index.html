@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus Energy Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 25px;
+            color: #1e293b;
+        }
+
+        h1 { color: #166534; }
+
+        .summary, .buildings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #cbd5e1;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .warning { color: red; font-weight: bold; }
+        .normal { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>Smart Campus Energy Monitoring System</h1>
+    <p>Daily electricity consumption and energy-saving targets</p>
+
+    <section class="summary">
+        <div class="card">
+            <h3>Total Campus Consumption</h3>
+            <h2 id="total">0 kWh</h2>
+        </div>
+
+        <div class="card">
+            <h3>Highest Energy Usage</h3>
+            <h2 id="highest">--</h2>
+            <p id="highestUsage"></p>
+        </div>
+    </section>
+
+    <section class="buildings" id="buildings"></section>
+
+    <script>
+        const buildings = [
+            { name: "Academic Block", usage: 125, target: 100 },
+            { name: "Library", usage: 85, target: 90 },
+            { name: "Hostel Block", usage: 110, target: 100 }
+        ];
+
+        const container = document.getElementById("buildings");
+
+        buildings.forEach(building => {
+            const excess = building.usage - 100;
+
+            container.innerHTML += `
+                <div class="card">
+                    <h2>${building.name}</h2>
+                    <p>Daily Consumption: ${building.usage} kWh</p>
+                    <p>Energy-Saving Target: ${building.target} kWh</p>
+
+                    ${
+                        building.usage > 100
+                        ? `<p class="warning">
+                            WARNING: Exceeds limit by ${excess} kWh
+                           </p>`
+                        : `<p class="normal">Consumption within limit</p>`
+                    }
+                </div>
+            `;
+        });
+
+        const total = buildings.reduce(
+            (sum, building) => sum + building.usage, 0
+        );
+
+        const highest = buildings.reduce(
+            (a, b) => a.usage > b.usage ? a : b
+        );
+
+        document.getElementById("total").textContent = total + " kWh";
+        document.getElementById("highest").textContent = highest.name;
+        document.getElementById("highestUsage").textContent =
+            highest.usage + " kWh per day";
+    </script>
+
+</body>
+</html>
